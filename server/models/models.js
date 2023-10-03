@@ -5,7 +5,8 @@ const User = sequelize.define('user', {
   login: {type: DataTypes.STRING, unique: true},
   name: {type: DataTypes.STRING},
   course: {type: DataTypes.INTEGER, validate: {min: 0, max: 6}},
-  photo: {type: DataTypes.STRING}
+  photo: {type: DataTypes.STRING},
+  shareCode: {type: DataTypes.STRING}
 })
 
 const Event = sequelize.define('event', {
@@ -79,6 +80,10 @@ const SocialType = sequelize.define('social_type', {
   label: {type: DataTypes.STRING}
 })
 
+const WeekType = sequelize.define('week_type', {
+  label: {type: DataTypes.STRING}
+})
+
 User.hasMany(Lesson)
 Lesson.belongsTo(User)
 
@@ -87,6 +92,9 @@ User.belongsTo(Faculty)
 
 Day.hasMany(Lesson)
 Lesson.belongsTo(Day)
+
+WeekType.hasMany(Lesson)
+Lesson.belongsTo(WeekType)
 
 Event.belongsToMany(User, {through: FavoriteEvent})
 User.belongsToMany(Event, {through: FavoriteEvent})
@@ -118,5 +126,6 @@ module.exports = {
   Internship,
   Day,
   Faculty,
-  SocialType
+  SocialType,
+  WeekType
 }

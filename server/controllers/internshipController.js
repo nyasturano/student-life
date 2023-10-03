@@ -15,14 +15,13 @@ class internshipController {
         return res.json(internship)
         
     } catch (e) {
-      next(ApiError.badRequest(e.message))
+      return next(ApiError.badRequest(e.message))
     }
   }
 
   async update(req, res) {
     const {id} = req.params
     const {title, description, url} = req.body
-    const {image} = req.files
 
     const internship = await Internship.update({title, description, url}, {where: {id}})
     return res.json(internship)

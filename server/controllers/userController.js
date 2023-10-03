@@ -1,6 +1,7 @@
+const ApiError = require('../error/ApiError')
 const { User } = require('../models/models')
 const jwt = require('jsonwebtoken')
-const ActiveDirectory = require('activedirectory');
+// const ActiveDirectory = require('activedirectory');
 
 const generateJwt = (login, role) => {
   return jwt.sign(
@@ -17,33 +18,38 @@ class userController {
     return res.json({token, role: req.user.role})
   }
 
-  async login(req, res) {
+  async login(req, res, next) {
     const {login, password} = req.body;
+
+    if (!login || !password) {
+      return next(ApiError.badRequest('Некорректный логин или пароль'))
+    }
     
-    // admin
+    // check if admin
     if (login == 'admin' && password == '12345') {
       const token = generateJwt(login, 'ADMIN')
       return res.json({token})
     }
 
-    const config = {
-      url: 'LDAP://212.192.128.126',
-      baseDN: 'dc=domain,dc=com'
-    };
+    // !!!connect to active directory!!!
 
-    const ad = new ActiveDirectory(config);
+    // if succesful:
+    try {
+      // try to find an existing user
+      let user = await User.findOne({where: {login}})
   
-    ad.authenticate(login, password, function (err, auth) {
-      if (err) {
-        return res.status(401).json({ error: 'Ошибка авторизации' })
-      }  
-      if (auth) {
-        const token = generateJwt(login, 'USER')
-        return res.json({token})
-      } else {
-        return res.status(401).json({ error: 'Неверный логин или пароль' })
+      // if there's no such user, insert a new one
+      if (user == null) {
+        user = await User.create({login, shareCode: "share_" + login}) 
       }
-    })
+      
+      // send token to client
+      const token = generateJwt(login, 'USER')
+      return res.json({token})
+
+    } catch(e) {
+      return next(ApiError.internal(e.message))
+    }
   }
 
 
@@ -52,7 +58,7 @@ class userController {
   }
 
   async getOne(req, res) {
-
+    
   }
 
   async getAll(req, res) {
@@ -62,6 +68,7 @@ class userController {
   async delete(req, res) {
 
   }
+
 }
 
 module.exports = new userController()

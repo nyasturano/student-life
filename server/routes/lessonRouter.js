@@ -1,15 +1,16 @@
 const lessonController = require('../controllers/lessonController')
-
+const authMiddleware = require('../middlewares/authMiddleware')
 
 const Router = require('express')
 const router = new Router()
 
-router.post('/', lessonController.create)
+router.post('/', authMiddleware, lessonController.create)
+router.post('/pull', authMiddleware, lessonController.pull)
 
-router.get('/:id', lessonController.getOne)
-router.get('/', lessonController.getAll)
+router.get('/', authMiddleware, lessonController.getAll)
+router.get('/share', authMiddleware, lessonController.share)
 
-router.put('/:id', lessonController.update)
-router.delete('/:id', lessonController.delete)
+router.put('/:id', authMiddleware, lessonController.update)
+router.delete('/:id', authMiddleware, lessonController.delete)
 
 module.exports = router;
