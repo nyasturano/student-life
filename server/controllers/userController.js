@@ -1,34 +1,49 @@
 const { User } = require('../models/models')
+const jwt = require('jsonwebtoken')
+const ActiveDirectory = require('activedirectory');
 
+const generateJwt = (login, role) => {
+  return jwt.sign(
+    {login, role}, 
+    process.env.SECRET_KEY,
+    {expiresIn: '24h'}
+  )
+}
 
 class userController {
 
   async auth(req, res) {
-
+    const token = generateJwt(req.user.login, req.user.role)
+    return res.json({token, role: req.user.role})
   }
 
   async login(req, res) {
-    const {username, password} = req.body;
+    const {login, password} = req.body;
+    
+    // admin
+    if (login == 'admin' && password == '12345') {
+      const token = generateJwt(login, 'ADMIN')
+      return res.json({token})
+    }
 
     const config = {
       url: 'LDAP://212.192.128.126',
       baseDN: 'dc=domain,dc=com'
     };
-  
+
     const ad = new ActiveDirectory(config);
   
-    ad.authenticate(username, password, function (err, auth) {
+    ad.authenticate(login, password, function (err, auth) {
       if (err) {
-        return res.status(401).json({ error: 'Ошибка авторизации' });
+        return res.status(401).json({ error: 'Ошибка авторизации' })
       }  
       if (auth) {
-        return res.json({ message: 'Пользователь успешно авторизован' });
+        const token = generateJwt(login, 'USER')
+        return res.json({token})
       } else {
-        return res.status(401).json({ error: 'Неверный логин или пароль' });
+        return res.status(401).json({ error: 'Неверный логин или пароль' })
       }
-    });
-
-
+    })
   }
 
 

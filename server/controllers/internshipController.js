@@ -4,6 +4,8 @@ const { Internship } = require('../models/models')
 class internshipController {
   async create(req, res) {
     const {title, description, url} = req.body
+    const token = req.headers.authorization.split(' ')[1]
+    console.log(token)
     console.log(req.body)
     const internship = await Internship.create({title, description, url, image: "image"})
     return res.json(internship)

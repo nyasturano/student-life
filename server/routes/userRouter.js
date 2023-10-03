@@ -4,6 +4,7 @@ const userController = require('../controllers/userController')
 const Router = require('express')
 const router = new Router()
 
+router.post('/login', userController.login)
 router.get('/:id', userController.getOne)
 router.get('/', userController.getAll)
 
