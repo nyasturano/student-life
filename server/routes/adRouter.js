@@ -5,6 +5,7 @@ const Router = require('express')
 const router = new Router()
 
 router.post('/', adController.create)
+router.post('/:id/addImage', adController.addImage)
 
 router.get('/:id', adController.getOne)
 router.get('/', adController.getAll)

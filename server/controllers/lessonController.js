@@ -83,12 +83,47 @@ class lessonController {
     }
   }
 
-  async update(req, res) {
+  async update(req, res, next) {
+    const {id} = req.params
+    const { 
+      name, 
+      teacher, 
+      classroom, 
+      startTime, 
+      endTime, 
+      day,
+      weekType 
+    } = req.body
 
+    try {
+      // find day
+      const dayObj = await Day.findOne({where: {label: day}})
+      if (!dayObj) {
+        return next(ApiError.badRequest('Ошибка в названии дня недели'))
+      }
+  
+      // find week
+      const weekTypeObj = await WeekType.findOne({where: {label: weekType}})
+      if (!weekTypeObj) {
+        return next(ApiError.badRequest('Ошибка в названии типа недели'))
+      }
+  
+      const lesson = await Lesson.update({name, teacher, classroom, startTime, endTime, day: dayObj.id, weekType: weekTypeObj.id}, {where: {id}})
+      return res.json(lesson)
+
+    } catch (e) {
+      return next(ApiError.internal(e.message));
+    }
   }
 
-  async delete(req, res) {
-
+  async delete(req, res, next) {
+    try {
+      const {id} = req.params
+      const lesson = await Lesson.destroy({where: {id}})
+      return res.json(lesson)
+    } catch (e) {
+      return next(ApiError.internal(e.message));
+    }
   }
 
   async share(req, res) {

@@ -1,4 +1,4 @@
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createBottomTabNavigator, createStackNavigator } from '@react-navigation/bottom-tabs';
 
 import Events from '../pages/Events';
 import Schedule from '../pages/Schedule';
@@ -8,17 +8,15 @@ import Account from '../pages/Account';
 import { AntDesign } from '@expo/vector-icons'; 
 import { Ionicons } from '@expo/vector-icons';
 
-
-// Main bottom navigation bar
-
 const Tab = createBottomTabNavigator();
 
-export default function MainNavigation() {
+export default function BottomNavigation() {
+
   return (
     <Tab.Navigator
       screenOptions={{
         activeTintColor: '#007BFF',
-        inactiveTintColor: 'gray',
+        inactiveTintColor: 'grey',
       }}
     >
       <Tab.Screen
@@ -56,7 +54,7 @@ export default function MainNavigation() {
       />
 
       <Tab.Screen
-        name='ЛК'
+        name='Личный кабинет'
         component={Account}
         options={{
           tabBarIcon: ({focused, color, size}) => (

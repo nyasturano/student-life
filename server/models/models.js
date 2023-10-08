@@ -3,8 +3,6 @@ const { DataTypes } = require('sequelize')
 
 const User = sequelize.define('user', {
   login: {type: DataTypes.STRING, unique: true},
-  name: {type: DataTypes.STRING},
-  course: {type: DataTypes.INTEGER, validate: {min: 0, max: 6}},
   photo: {type: DataTypes.STRING},
   shareCode: {type: DataTypes.STRING}
 })
@@ -18,20 +16,22 @@ const Event = sequelize.define('event', {
 
 const FavoriteEvent = sequelize.define('favorite_event', {})
 
-const Organizer = sequelize.define('organizer', {
+const Organization = sequelize.define('organization', {
   name: {type: DataTypes.STRING},
+  shortName: {type: DataTypes.STRING},
   description: {type: DataTypes.STRING},
+  shortDescription: {type: DataTypes.STRING},
   image: {type: DataTypes.STRING}
 })
 
-const OrganizerSocial = sequelize.define('organizer_social', {
+const OrganizationSocial = sequelize.define('organization_social', {
   link: {type: DataTypes.STRING}
 })
 
 const Lesson = sequelize.define('lesson', {
   name: {type: DataTypes.STRING},
   teacher: {type: DataTypes.STRING},
-  classroom: {type: DataTypes.INTEGER},
+  classroom: {type: DataTypes.STRING},
   startTime: {type: DataTypes.TIME},
   endTime: {type: DataTypes.TIME}
 })
@@ -43,7 +43,7 @@ const Ad = sequelize.define('ad', {
   price: {type: DataTypes.INTEGER},
   address: {type: DataTypes.STRING},
   floor: {type: DataTypes.INTEGER},
-  lattitude: {type: DataTypes.DOUBLE},
+  latitude: {type: DataTypes.DOUBLE},
   longitude: {type: DataTypes.DOUBLE},
   area: {type: DataTypes.INTEGER},
   rooms: {type: DataTypes.INTEGER},
@@ -51,6 +51,13 @@ const Ad = sequelize.define('ad', {
   balcony: {type: DataTypes.BOOLEAN},
   furniture: {type: DataTypes.BOOLEAN},
   appliances: {type: DataTypes.BOOLEAN},
+})
+
+const Owner = sequelize.define('owner', {
+  name: {type: DataTypes.STRING},
+  photo: {type: DataTypes.STRING},
+  phone: {type: DataTypes.STRING},
+  socialUrl: {type: DataTypes.STRING},
 })
 
 const ResidenceType = sequelize.define('residence_type', {
@@ -72,10 +79,6 @@ const Day = sequelize.define('day', {
   label: {type: DataTypes.STRING}
 })
 
-const Faculty = sequelize.define('faculty', {
-  label: {type: DataTypes.STRING}
-})
-
 const SocialType = sequelize.define('social_type', {
   label: {type: DataTypes.STRING}
 })
@@ -84,11 +87,22 @@ const WeekType = sequelize.define('week_type', {
   label: {type: DataTypes.STRING}
 })
 
+const Food = sequelize.define('food', {
+  name: {type: DataTypes.STRING},
+  address: {type: DataTypes.STRING},
+  discount: {type: DataTypes.STRING},
+  info: {type: DataTypes.STRING},
+  image: {type: DataTypes.STRING},
+})
+
+const FoodCategory = sequelize.define('food_category', {
+  title: {type: DataTypes.STRING},
+  image: {type: DataTypes.STRING},
+})
+
+
 User.hasMany(Lesson)
 Lesson.belongsTo(User)
-
-Faculty.hasMany(User)
-User.belongsTo(Faculty)
 
 Day.hasMany(Lesson)
 Lesson.belongsTo(Day)
@@ -99,14 +113,17 @@ Lesson.belongsTo(WeekType)
 Event.belongsToMany(User, {through: FavoriteEvent})
 User.belongsToMany(Event, {through: FavoriteEvent})
 
-Organizer.hasMany(Event)
-Event.belongsTo(Organizer)
+Organization.hasMany(Event)
+Event.belongsTo(Organization)
 
-Organizer.hasMany(OrganizerSocial)
-OrganizerSocial.belongsTo(Organizer)
+Organization.hasMany(OrganizationSocial)
+OrganizationSocial.belongsTo(Organization)
 
-OrganizerSocial.hasMany(SocialType)
-SocialType.belongsTo(OrganizerSocial)
+SocialType.hasMany(OrganizationSocial)
+OrganizationSocial.belongsTo(SocialType)
+
+Owner.hasMany(Ad)
+Ad.belongsTo(Owner)
 
 Ad.hasMany(AdImage)
 AdImage.belongsTo(Ad)
@@ -114,18 +131,23 @@ AdImage.belongsTo(Ad)
 ResidenceType.hasMany(Ad)
 Ad.belongsTo(ResidenceType)
 
+FoodCategory.hasMany(Food)
+Food.belongsTo(FoodCategory)
+
 module.exports = {
   User,
   Event,
-  Organizer,
-  OrganizerSocial,
+  Organization,
+  OrganizationSocial,
   Lesson,
   Ad,
   AdImage,
   ResidenceType,
   Internship,
   Day,
-  Faculty,
   SocialType,
-  WeekType
+  WeekType,
+  Food,
+  FoodCategory,
+  Owner
 }
