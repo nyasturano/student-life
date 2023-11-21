@@ -14,3 +14,6 @@ INSERT INTO `socials` (`label`) VALUES ('telegram');
 
 INSERT INTO `residence_types` (`label`) VALUES ('Сожитель');  
 INSERT INTO `residence_types` (`label`) VALUES ('Квартира');  
+
+INSERT INTO `faculties` (`label`) VALUES ('ФМиКН');  
+INSERT INTO `faculties` (`label`) VALUES ('ФКТиПМ');  
