@@ -1,4 +1,4 @@
-INSERT INTO `days` (`label)  VALUES ('Понедельник');  
+INSERT INTO `days` (`label`)  VALUES ('Понедельник');  
 INSERT INTO `days` (`label`)  VALUES ('Вторник');  
 INSERT INTO `days` (`label`)  VALUES ('Среда';  
 INSERT INTO `days` (`label`)  VALUES ('Четверг');  
