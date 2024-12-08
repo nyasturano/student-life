@@ -10,6 +10,8 @@ import * as SecureStore from 'expo-secure-store';
 import useHttp from '../hooks/http.hook'
 import { API_URL } from "@env"
 
+import { WebView } from 'react-native-webview';
+
 export default function Login() {
 
   const auth = useSelector(state => state.auth)
@@ -20,6 +22,7 @@ export default function Login() {
 
   const [username, setUsername] = useState('s00000000@edu.kubsu.ru');
   const [password, setPassword] = useState('');
+  const [captchaToken, setCaptchaToken] = useState(null);
 
   const checkAuth = async () => {
     let token = await SecureStore.getItemAsync('authToken')
@@ -48,6 +51,13 @@ export default function Login() {
   useEffect(() => {
     checkAuth()
   }, [])
+
+  const handleMessage = (event) => {
+    console.log("!!")
+    const { token } = JSON.parse(event.nativeEvent.data);
+    setCaptchaToken(token);
+    console.log('CAPTCHA выполнена!', `Токен: ${token}`);
+  };
 
   return (
 
@@ -83,6 +93,8 @@ export default function Login() {
                 required
               />
             </View>
+
+           
 
             <TouchableOpacity style={styles.button} onPress={login}>
               <Text style={styles.buttonText}>Войти</Text>
@@ -159,5 +171,9 @@ const styles = StyleSheet.create({
   },
   error: {
     color: 'red'
+  },
+  captcha: {
+    width: '100%',
+    height: 100
   }
 });

@@ -33,7 +33,14 @@ export default function Map() {
   // when start of finish room changes, try to find a new path
   useEffect(() => {
     if (startRoom && finishRoom && startRoom != finishRoom) {
-      setPath(pathFinder(vertices, startRoom, finishRoom));
+      // Yandex Cloud Function
+      fetch(`https://d5dsdd2ujcdsp6m3e8et.apigw.yandexcloud.net/find_path?start=${startRoom}&finish=${finishRoom}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setPath(data.path);
+      })
+      
+      // setPath(pathFinder(vertices, startRoom, finishRoom));
     }
   }, [startRoom, finishRoom]);
 
@@ -49,6 +56,7 @@ export default function Map() {
     setFocusRoom(id);
     setFloor(vertices[id].z);
   }
+
 
   return (
     <View style={styles.map}>

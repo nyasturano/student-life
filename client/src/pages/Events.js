@@ -15,6 +15,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { Card, Title, Paragraph } from 'react-native-paper';
 import * as Clipboard from 'expo-clipboard';
 
+import { API_URL, SERVER_URL } from "@env"
+
 const CategoryFilter = ({ selectedCategory, onCategorySelect }) => {
   const categories = [
     { id: null, name: 'Все' },

@@ -28,8 +28,15 @@ export default function Internships() {
   };
 
   useEffect(() => {
-    request(`${API_URL}/internship`)
-      .then(res => setInternships(res))
+    console.log("internships")
+
+    fetch(`http://192.168.1.74:5000/api/internship`)
+    .then(res => res.json())
+    .then(data => setInternships(data))
+
+    // request(`http://192.168.1.74:5000/api/internship`)
+    //   .then(res => console.log(API_URL))
+    //   .then(res => setInternships(res))
   }, [])
 
   return (
